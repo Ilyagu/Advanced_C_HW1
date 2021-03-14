@@ -1,10 +1,10 @@
 IT1
 ======
-.. image:: https://travis-ci.com/Ilyagu/Advanced_programming_C.svg?branch=feachure
-    :target: https://travis-ci.com/Ilyagu/Advanced_programming_C
+.. image:: https://travis-ci.com/Ilyagu/Advanced_C_HW1.svg?branch=dev1
+    :target: https://travis-ci.com/Ilyagu/Advanced_C_HW1
 
-.. image:: https://codecov.io/gh/Ilyagu/Advanced_programming_C/branch/feachure/graph/badge.svg?token=5DZTO29RU4
-    :target: https://codecov.io/gh/Ilyagu/Advanced_programming_C
+.. image:: https://codecov.io/gh/Ilyagu/Advanced_C_HW1/branch/main/graph/badge.svg?token=rFxQjfowyx
+    :target: https://codecov.io/gh/Ilyagu/Advanced_C_HW1
 
 Первое индивидуальное задание по курсу "Углубленное программирование на C/C++
 -----------------------------------------------------------------------------
