@@ -5,8 +5,9 @@
 #include <stdio.h>
 #include <string.h>
 
-size_t push_back(Road *all_roads, size_t new_road, size_t length, char type[100],
-                 char quality[100], size_t lanes) {
+size_t push_back(Road *all_roads, size_t new_road, size_t length, const char type[],
+                 const char quality[], size_t lanes) {
+    // вспомогательная функция для load_data, пушит в конец массива объект
     all_roads[new_road].length = length;
     strncpy(all_roads[new_road].type, type, strlen(type));
     strncpy(all_roads[new_road].quality, quality, strlen(quality));
@@ -15,42 +16,46 @@ size_t push_back(Road *all_roads, size_t new_road, size_t length, char type[100]
     return new_road;
 }
 
-size_t find_quality(char *quality) {
-    if (strcmp(quality, "Отличное") == 0)
+int find_quality(char *quality) {
+    // вычисление качества по атрибуту объекта
+    if (quality == NULL) return QUAL_ERROR;
+    else if (strcmp(quality, EXCELLENT) == 0)
         return 0;
-    if (strcmp(quality, "Хорошее") == 0)
+    else if (strcmp(quality, GOOD) == 0)
         return 20;
-    if (strcmp(quality, "Плохое") == 0)
+    else if (strcmp(quality, BAD) == 0)
         return 35;
-    if (strcmp(quality, "Ужасное") == 0)
+    else if (strcmp(quality, TERRIBLE) == 0)
         return 50;
-    return 200;
+    return QUAL_ERROR;
 }
 
-char * decrypt(size_t n) {
+const char * decrypt(size_t n) {
+    // вывод рейтинга в клиентском виде
     if (n == 0) {
-        return "Таких дорог нет!";
+        return NOROADS;
     } else if (n < 60) {
-        return "Ужасное";
+        return TERRIBLE;
     } else if (n < 71) {
-        return "Плохое";
+        return BAD;
     } else if (n < 85) {
-        return "Хорошее";
+        return GOOD;
     } else if (n <= 100) {
-        return "Отличное";
+        return EXCELLENT;
     } else {
-        printf("%zu", n);
-        return "ERROR";
+        return ERROR;
     }
 }
 
-char *qual(Road *all_roads, size_t added_roads, char *type, size_t lanes) {
+const char *qual(Road *all_roads, size_t added_roads, char *type, size_t lanes) {
+    if (type == NULL) return ERROR;
     size_t sum = 0;
     size_t count = 0;
     for (size_t i = 0; i < added_roads; i++) {
         if ((all_roads[i].lanes == lanes) &&
             (strcmp(all_roads[i].type, type) == 0)) {
-            sum = sum + 100 - find_quality(all_roads[i].quality);
+            // вычисление общего рейтинга
+            sum = sum + MAX_RATING - find_quality(all_roads[i].quality);
             count++;
         }
     }
@@ -59,27 +64,29 @@ char *qual(Road *all_roads, size_t added_roads, char *type, size_t lanes) {
     return decrypt(sum / count);
 }
 
-size_t load_data(Road * all_roads) {
+int load_data(Road * all_roads) {
+    if (all_roads == NULL) return LOAD_ERROR;
+    // загрузка базы
     size_t added_roads = 0;
     added_roads = push_back(all_roads, added_roads,
-                            300, "Асфальт\0", "Хороше\0", 4);
+                            300, ASPHALT, GOOD, 4);
     added_roads = push_back(all_roads, added_roads,
-                            2000, "Грунт\0", "Отличное\0", 1);
+                            2000, GROUND, EXCELLENT, 1);
     added_roads = push_back(all_roads, added_roads,
-                            400, "Асфальт\0", "Ужасное\0", 5);
+                            400, ASPHALT, TERRIBLE, 5);
     added_roads = push_back(all_roads, added_roads,
-                            50, "Грунт\0", "Отличное\0", 1);
+                            50, GROUND, EXCELLENT, 1);
     added_roads = push_back(all_roads, added_roads,
-                            500, "Асфальт\0", "Плохое\0", 3);
+                            500, ASPHALT, BAD, 3);
     added_roads = push_back(all_roads, added_roads,
-                            50, "Грунт\0", "Плохое\0", 2);
+                            50, GROUND, BAD, 2);
     added_roads = push_back(all_roads, added_roads,
-                            200, "Асфальт\0", "Ужасное\0", 5);
+                            200, ASPHALT, TERRIBLE, 5);
     added_roads = push_back(all_roads, added_roads,
-                            600, "Грунт\0", "Ужасное\0", 1);
+                            600, GROUND, TERRIBLE, 1);
     added_roads = push_back(all_roads, added_roads,
-                            100, "Асфальт\0", "Ужасное\0", 5);
+                            100, ASPHALT, TERRIBLE, 5);
     added_roads = push_back(all_roads, added_roads,
-                            30, "Грунт\0", "Ужасное\0", 1);
+                            30, GROUND, TERRIBLE, 1);
     return added_roads;
 }

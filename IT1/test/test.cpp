@@ -7,6 +7,7 @@
 
 extern "C" {
     #include "func/func.h"
+    #include "../src/func.c"
 }
 
 class FindQuality : public ::testing::Test {
@@ -17,11 +18,11 @@ class FindQuality : public ::testing::Test {
             test_result[i] = new char[100];
         }
 
-        strncpy(test_result[0], "Отличное", 100);
-        strncpy(test_result[1], "Хорошее", 100);
-        strncpy(test_result[2], "Плохое", 100);
-        strncpy(test_result[3], "Ужасное", 100);
-        strncpy(test_result[4], "Фейк", 100);
+        strncpy(test_result[0], EXCELLENT, 100);
+        strncpy(test_result[1], GOOD, 100);
+        strncpy(test_result[2], BAD, 100);
+        strncpy(test_result[3], TERRIBLE, 100);
+        strncpy(test_result[4], NOROADS, 100);
     }
     void TearDown() {
         for (int i = 0; i < 5; i++) {
@@ -32,52 +33,56 @@ class FindQuality : public ::testing::Test {
     char **test_result;
 };
 
-TEST_F(FindQuality, find_quality1) {
+TEST_F(FindQuality, find_quality_for_null) {
+    EXPECT_EQ(-300, find_quality(NULL));
+}
+
+TEST_F(FindQuality, find_quality_for_excellent) {
     EXPECT_EQ(0, find_quality(test_result[0]));
 }
 
-TEST_F(FindQuality, find_quality2) {
+TEST_F(FindQuality, find_quality_for_good) {
     EXPECT_EQ(20, find_quality(test_result[1]));
 }
 
-TEST_F(FindQuality, find_quality3) {
+TEST_F(FindQuality, find_quality_for_bad) {
     EXPECT_EQ(35, find_quality(test_result[2]));
 }
 
-TEST_F(FindQuality, find_quality4) {
+TEST_F(FindQuality, find_quality_for_terrible) {
     EXPECT_EQ(50, find_quality(test_result[3]));
 }
 
 TEST_F(FindQuality, invalid_quallity) {
-    EXPECT_EQ(200, find_quality(test_result[4]));
+    EXPECT_EQ(-300, find_quality(test_result[4]));
 }
 
 //
 // test decrypt
 //
 
-TEST(decrypt, decrypt1) {
-    EXPECT_STREQ("Таких дорог нет!", decrypt(0));
+TEST(decrypt, decrypt_for_no_such_roads) {
+    EXPECT_STREQ(NOROADS, decrypt(0));
 }
 
-TEST(decrypt, decrypt2) {
-    EXPECT_STREQ("Ужасное", decrypt(50));
+TEST(decrypt, decrypt_for_terrible) {
+    EXPECT_STREQ(TERRIBLE, decrypt(50));
 }
 
-TEST(decrypt, decrypt3) {
-    EXPECT_STREQ("Плохое", decrypt(60));
+TEST(decrypt, decrypt_for_bad) {
+    EXPECT_STREQ(BAD, decrypt(60));
 }
 
-TEST(decrypt, decrypt4) {
-    EXPECT_STREQ("Хорошее", decrypt(72));
+TEST(decrypt, decrypt_for_good) {
+    EXPECT_STREQ(GOOD, decrypt(72));
 }
 
-TEST(decrypt, decrypt5) {
-    EXPECT_STREQ("Отличное", decrypt(95));
+TEST(decrypt, decrypt_for_excellent) {
+    EXPECT_STREQ(EXCELLENT, decrypt(95));
 }
 
-TEST(decrypt, decrypt6) {
-    EXPECT_STREQ("ERROR", decrypt(200));
+TEST(decrypt, invalid_decrypt) {
+    EXPECT_STREQ(ERROR, decrypt(200));
 }
 
 
@@ -93,43 +98,43 @@ class TestQual : public ::testing::Test {
             test_result[i] = new char[100];
         }
 
-        strncpy(test_result[0], "Отличное", 100);
-        strncpy(test_result[1], "Хорошее", 100);
-        strncpy(test_result[2], "Плохое", 100);
-        strncpy(test_result[3], "Ужасное", 100);
-        strncpy(test_result[4], "Асфальт", 100);
-        strncpy(test_result[5], "Грунт", 100);
+        strncpy(test_result[0], EXCELLENT, 100);
+        strncpy(test_result[1], GOOD, 100);
+        strncpy(test_result[2], BAD, 100);
+        strncpy(test_result[3], TERRIBLE, 100);
+        strncpy(test_result[4], ASPHALT, 100);
+        strncpy(test_result[5], GROUND, 100);
 
         all_roads = reinterpret_cast<Road *>(malloc(sizeof(Road) * 6));
 
         all_roads[0].length = 200;
-        strncpy(all_roads[0].type, test_result[5], 50);
-        strncpy(all_roads[0].quality, test_result[0], 50);
+        strncpy(all_roads[0].type, GROUND, 50);
+        strncpy(all_roads[0].quality, EXCELLENT, 50);
         all_roads[0].lanes = 3;
 
         all_roads[1].length = 200;
-        strncpy(all_roads[1].type, test_result[5], 50);
-        strncpy(all_roads[1].quality, test_result[0], 50);
+        strncpy(all_roads[1].type, GROUND, 50);
+        strncpy(all_roads[1].quality, EXCELLENT, 50);
         all_roads[1].lanes = 3;
 
         all_roads[2].length = 200;
-        strncpy(all_roads[2].type, test_result[5], 50);
-        strncpy(all_roads[2].quality, test_result[3], 50);
+        strncpy(all_roads[2].type, GROUND, 50);
+        strncpy(all_roads[2].quality, TERRIBLE, 50);
         all_roads[2].lanes = 3;
 
         all_roads[3].length = 200;
-        strncpy(all_roads[3].type, test_result[5], 50);
-        strncpy(all_roads[3].quality, test_result[3], 50);
+        strncpy(all_roads[3].type, GROUND, 50);
+        strncpy(all_roads[3].quality, TERRIBLE, 50);
         all_roads[3].lanes = 3;
 
         all_roads[4].length = 200;
-        strncpy(all_roads[4].type, test_result[4], 50);
-        strncpy(all_roads[4].quality, test_result[0], 50);
+        strncpy(all_roads[4].type, ASPHALT, 50);
+        strncpy(all_roads[4].quality, EXCELLENT, 50);
         all_roads[4].lanes = 5;
 
         all_roads[5].length = 200;
-        strncpy(all_roads[5].type, test_result[4], 50);
-        strncpy(all_roads[5].quality, test_result[3], 50);
+        strncpy(all_roads[5].type, ASPHALT, 50);
+        strncpy(all_roads[5].quality, TERRIBLE, 50);
         all_roads[5].lanes = 5;
     }
     void TearDown() {
@@ -143,71 +148,14 @@ class TestQual : public ::testing::Test {
     char **test_result;
 };
 
-TEST_F(TestQual, qual1) {
-    EXPECT_STREQ("Хорошее", qual(all_roads, 6, test_result[5], 3));
+TEST_F(TestQual, qual_for_ground) {
+    EXPECT_STREQ(GOOD, qual(all_roads, 6, GROUND, 3));
 }
 
-TEST_F(TestQual, qual2) {
-    EXPECT_STREQ("Хорошее", qual(all_roads, 6, test_result[4], 5));
+TEST_F(TestQual, qual_for_asphalt) {
+    EXPECT_STREQ(GOOD, qual(all_roads, 6, ASPHALT, 5));
 }
 
-TEST_F(TestQual, qual3) {
-    EXPECT_STREQ("Таких дорог нет!", qual(all_roads, 6, test_result[4], 6));
+TEST_F(TestQual, ivalid_qual) {
+    EXPECT_STREQ(NOROADS, qual(all_roads, 6, ASPHALT, 6));
 }
-
-//
-// test push_back
-//
-//
-// class TestPushBack : public ::testing::Test {
-// protected:
-//    void SetUp() {
-//        test_result = new char*[4];
-//        for (int i = 0; i < 4; i++) {
-//            test_result[i] = new char[100];
-//        }
-//
-//        strncpy(test_result[0], "Асфальт\0", 100);
-//        strncpy(test_result[1], "Отличное\0", 100);
-//        strncpy(test_result[2], "Грунт\0", 100);
-//        strncpy(test_result[3], "Ужасное\0", 100);
-//
-//        all_roads = reinterpret_cast<Road *>(malloc(sizeof(Road) * 10));
-//
-//        added_roads = push_back(all_roads, 0,
-//                                       100,
-//                                test_result[0],
-//                                test_result[1],
-//                                       3);
-//
-//        added_roads = push_back(all_roads, added_roads,
-//                                200,
-//                                test_result[2],
-//                                test_result[3],
-//                                5);
-//    }
-//    void TearDown() {
-//        free(all_roads);
-//        for (int i = 0; i < 4; i++) {
-//            delete []test_result[i];
-//        }
-//        delete []test_result;
-//    }
-//    char **test_result;
-//    Road * all_roads;
-//    size_t added_roads;
-// };
-//
-// TEST_F(TestPushBack, push_back1) {
-//    EXPECT_EQ(100, all_roads[0].length);
-//    EXPECT_STREQ("Асфальт\0", all_roads[0].type);
-//    EXPECT_STREQ("Отличное\0", all_roads[0].quality);
-//    EXPECT_EQ(3, all_roads[0].lanes);
-// }
-//
-// TEST_F(TestPushBack, push_back2) {
-//    EXPECT_EQ(200, all_roads[1].length);
-//    EXPECT_STREQ("Грунт\0", all_roads[1].type);
-//    EXPECT_STREQ("Ужасное\0", all_roads[1].quality);
-//    EXPECT_EQ(5, all_roads[1].lanes);
-// }
