@@ -11,52 +11,45 @@ extern "C" {
 }
 
 #define ROADS 11
+#define QUAL_ERROR -300
+#define MAX_RATING 100
+#define LOAD_ERROR -1
+#define EXCELLENT "Отличное"
+#define GOOD "Хорошее"
+#define BAD "Плохое"
+#define TERRIBLE "Ужасное"
+#define NOROADS "Таких дорог нет!"
+#define ERROR "ERROR"
+#define ASPHALT "Асфальт"
+#define GROUND "Грунт"
 
-class FindQuality : public ::testing::Test {
- protected:
-    void SetUp() {
-        test_result = new char*[5];
-        for (int i = 0; i < 5; i++) {
-            test_result[i] = new char[100];
-        }
+//
+// test find_quality
+//
 
-        strncpy(test_result[0], EXCELLENT, 100);
-        strncpy(test_result[1], GOOD, 100);
-        strncpy(test_result[2], BAD, 100);
-        strncpy(test_result[3], TERRIBLE, 100);
-        strncpy(test_result[4], NOROADS, 100);
-    }
-    void TearDown() {
-        for (int i = 0; i < 5; i++) {
-            delete []test_result[i];
-        }
-        delete []test_result;
-    }
-    char **test_result;
-};
 
-TEST_F(FindQuality, find_quality_for_null) {
+TEST(FindQuality, find_quality_for_null) {
     EXPECT_EQ(-300, find_quality(NULL));
 }
 
-TEST_F(FindQuality, find_quality_for_excellent) {
-    EXPECT_EQ(0, find_quality(test_result[0]));
+TEST(FindQuality, find_quality_for_excellent) {
+    EXPECT_EQ(0, find_quality(EXCELLENT));
 }
 
-TEST_F(FindQuality, find_quality_for_good) {
-    EXPECT_EQ(20, find_quality(test_result[1]));
+TEST(FindQuality, find_quality_for_good) {
+    EXPECT_EQ(20, find_quality(GOOD));
 }
 
-TEST_F(FindQuality, find_quality_for_bad) {
-    EXPECT_EQ(35, find_quality(test_result[2]));
+TEST(FindQuality, find_quality_for_bad) {
+    EXPECT_EQ(35, find_quality(BAD));
 }
 
-TEST_F(FindQuality, find_quality_for_terrible) {
-    EXPECT_EQ(50, find_quality(test_result[3]));
+TEST(FindQuality, find_quality_for_terrible) {
+    EXPECT_EQ(50, find_quality(TERRIBLE));
 }
 
-TEST_F(FindQuality, invalid_quallity) {
-    EXPECT_EQ(-300, find_quality(test_result[4]));
+TEST(FindQuality, invalid_quallity) {
+    EXPECT_EQ(-300, find_quality(NOROADS));
 }
 
 //
@@ -81,6 +74,10 @@ TEST(decrypt, decrypt_for_good) {
 
 TEST(decrypt, decrypt_for_excellent) {
     EXPECT_STREQ(EXCELLENT, decrypt(95));
+}
+
+TEST(decrypt, invalid_decrypt2) {
+    EXPECT_STREQ(ERROR, decrypt(-54));
 }
 
 TEST(decrypt, invalid_decrypt) {
@@ -191,5 +188,13 @@ TEST_F(TestQual, ivalid_qual_null_on_type) {
 //
 
 TEST(TestLoad, invalid_load) {
-EXPECT_EQ(LOAD_ERROR, load_data(NULL));
+    ASSERT_EQ(LOAD_ERROR, load_data(NULL));
+}
+
+//
+// test push_back
+//
+
+TEST(TestPushBack, invalid_pushback) {
+    ASSERT_EQ(PUSH_ERROR, push_back(NULL, 0, 200, ASPHALT, GOOD, 4));
 }

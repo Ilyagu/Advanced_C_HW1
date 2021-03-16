@@ -5,8 +5,10 @@
 #include <stdio.h>
 #include <string.h>
 
-size_t push_back(Road *all_roads, size_t new_road, size_t length, const char type[],
+int push_back(Road *all_roads, size_t new_road, size_t length, const char type[],
                  const char quality[], size_t lanes) {
+    // обработка нуля в указателе
+    if (all_roads == NULL) return PUSH_ERROR;
     // вспомогательная функция для load_data, пушит в конец массива объект
     all_roads[new_road].length = length;
     strncpy(all_roads[new_road].type, type, strlen(type));
@@ -16,8 +18,9 @@ size_t push_back(Road *all_roads, size_t new_road, size_t length, const char typ
     return new_road;
 }
 
+// вычисление качества по атрибуту объекта
 int find_quality(char *quality) {
-    // вычисление качества по атрибуту объекта
+    // обработка нуля в указателе
     if (quality == NULL) return QUAL_ERROR;
     else if (strcmp(quality, EXCELLENT) == 0)
         return 0;
@@ -30,8 +33,8 @@ int find_quality(char *quality) {
     return QUAL_ERROR;
 }
 
+// вывод рейтинга в клиентском виде
 const char * decrypt(size_t n) {
-    // вывод рейтинга в клиентском виде
     if (n == 0) {
         return NOROADS;
     } else if (n < 60) {
@@ -47,7 +50,9 @@ const char * decrypt(size_t n) {
     }
 }
 
+// главная функция выдающая результат: среднее качество дорог с покрытием и числом полос
 const char *qual(Road *all_roads, size_t added_roads, char *type, size_t lanes) {
+    // обработка нуля в указателе
     if (type == NULL || all_roads == NULL) return ERROR;
     size_t sum = 0;
     size_t count = 0;
@@ -59,15 +64,17 @@ const char *qual(Road *all_roads, size_t added_roads, char *type, size_t lanes) 
             count++;
         }
     }
+    // если нет таких дорог
     if (count == 0) return decrypt(0);
     else
     return decrypt(sum / count);
 }
 
 int load_data(Road * all_roads) {
+    // обработка нуля в указателе
     if (all_roads == NULL) return LOAD_ERROR;
     // загрузка базы
-    size_t added_roads = 0;
+    int added_roads = 0;
     added_roads = push_back(all_roads, added_roads,
                             300, ASPHALT, GOOD, 4);
     added_roads = push_back(all_roads, added_roads,

@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define PUSH_ERROR -100
 #define QUAL_ERROR -300
 #define MAX_RATING 100
 #define LOAD_ERROR -1
