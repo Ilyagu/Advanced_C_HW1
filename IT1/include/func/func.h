@@ -16,7 +16,7 @@
 #define TERRIBLE "Ужасное"
 #define NOROADS "Таких дорог нет!"
 #define ERROR "ERROR"
-#define ASPHALT "Асфльт"
+#define ASPHALT "Асфальт"
 #define GROUND "Грунт"
 
 typedef struct Road {

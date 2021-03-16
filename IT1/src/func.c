@@ -48,7 +48,7 @@ const char * decrypt(size_t n) {
 }
 
 const char *qual(Road *all_roads, size_t added_roads, char *type, size_t lanes) {
-    if (type == NULL) return ERROR;
+    if (type == NULL || all_roads == NULL) return ERROR;
     size_t sum = 0;
     size_t count = 0;
     for (size_t i = 0; i < added_roads; i++) {
@@ -85,7 +85,7 @@ int load_data(Road * all_roads) {
     added_roads = push_back(all_roads, added_roads,
                             600, GROUND, TERRIBLE, 1);
     added_roads = push_back(all_roads, added_roads,
-                            100, ASPHALT, TERRIBLE, 5);
+                            100, ASPHALT, BAD, 5);
     added_roads = push_back(all_roads, added_roads,
                             30, GROUND, TERRIBLE, 1);
     return added_roads;
