@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MAX_ROADS 50
 #define PUSH_ERROR -100
 #define QUAL_ERROR -300
 #define MAX_RATING 100
@@ -28,8 +29,8 @@ typedef struct Road {
 } Road;
 
 int load_data(Road * all_roads);
-void input_lanes(size_t *n);
-void input_type(char * str);
+size_t input_lanes(size_t *n);
+size_t input_type(char * str);
 const char * qual(Road * all_roads, size_t added_roads, char * type, size_t lanes);
 
 #endif  // ADVANCED_PROGRAMMING_C_IT1_INCLUDE_MAIN_H_

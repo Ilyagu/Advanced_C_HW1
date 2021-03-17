@@ -6,39 +6,12 @@
 
 #include "func/func.h"
 
-void input_lanes(size_t * n) {
-    printf("Введите число полос:\n");
-    int res = scanf("%zu", n);
-    while (!res || *n > 50) {
-        // проверка на валидность
-        if (!res) {
-            printf("Введите корректно число полос!:\n");
-            input_lanes(n);
-            res = scanf("%zu", n);
-        }
-        if (*n > 50) {
-            printf("Не существует такого количества полос!\n"
-                   "Введите корректно число полос!:\n");
-            res = scanf("%zu", n);
-        }
-    }
-}
-
-void input_type(char * test_type) {
-    printf("%s\n", "Введите вид покрытия (Асфальт или Грунт):");
-    while (1) {
-        scanf("%49s", test_type);
-        if (strcmp(test_type, ASPHALT) == 0)
-            break;
-        else if (strcmp(test_type, GROUND) == 0)
-            break;
-        else
-            printf("%s", "Некорректный ввод, повторите еще раз:\n");
-    }
-}
-
 int main() {
     Road *all_roads = calloc(50, sizeof(Road));
+    if (all_roads == NULL) {
+        printf("%s\n", ERROR);
+        return 0;
+    }
     size_t added_roads;
     // загружаем данные
     added_roads = load_data(all_roads);
@@ -46,19 +19,25 @@ int main() {
         printf("%s\n", ERROR);
         return 0;
     }
-    size_t n;
+    size_t lanes;
     // ввод числа полос
-    input_lanes(&n);
+    if (input_lanes(&lanes) == 1) {
+        printf("%s\n", ERROR);
+        return 0;
+    }
     char test_type[50];
     // ввод типа покрытия
-    input_type(test_type);
-    const char* result = qual(all_roads, added_roads, test_type, n);
+    if (input_type(test_type) == 1) {
+        printf("%s\n", ERROR);
+        return 0;
+    }
+    const char* result = qual(all_roads, added_roads, test_type, lanes);
     if (strcmp(result, NOROADS) == 0 || strcmp(result, ERROR) == 0)
         printf("%s\n", result);
     else
         printf("\nСреднее качество дорог с покрытием %s  "
            "c количеством полос %zu: \n%s\n",
-           test_type, n, result);
+           test_type, lanes, result);
     free(all_roads);
     return 0;
 }

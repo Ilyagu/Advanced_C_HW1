@@ -5,14 +5,21 @@
 #include <stdio.h>
 #include <string.h>
 
+#define MAX_QULITY_SIZE 50
+#define MAX_EXCELLENT_RATING 100
+#define MAX_GOOD_RATING 85
+#define MAX_BAD_RATING 71
+#define MAX_TERRIBLE_RATING 60
+
 int push_back(Road *all_roads, size_t new_road, size_t length, const char type[],
                  const char quality[], size_t lanes) {
     // обработка нуля в указателе
     if (all_roads == NULL) return PUSH_ERROR;
+    if (new_road >= MAX_ROADS) return new_road;
     // вспомогательная функция для load_data, пушит в конец массива объект
     all_roads[new_road].length = length;
-    strncpy(all_roads[new_road].type, type, strlen(type));
-    strncpy(all_roads[new_road].quality, quality, strlen(quality));
+    strncpy(all_roads[new_road].type, type, 50);
+    strncpy(all_roads[new_road].quality, quality, 50);
     all_roads[new_road].lanes = lanes;
     new_road++;
     return new_road;
@@ -37,13 +44,13 @@ int find_quality(char *quality) {
 const char * decrypt(size_t n) {
     if (n == 0) {
         return NOROADS;
-    } else if (n < 60) {
+    } else if (n < MAX_TERRIBLE_RATING) {
         return TERRIBLE;
-    } else if (n < 71) {
+    } else if (n < MAX_BAD_RATING) {
         return BAD;
-    } else if (n < 85) {
+    } else if (n < MAX_GOOD_RATING) {
         return GOOD;
-    } else if (n <= 100) {
+    } else if (n <= MAX_EXCELLENT_RATING) {
         return EXCELLENT;
     } else {
         return ERROR;
@@ -68,6 +75,40 @@ const char *qual(Road *all_roads, size_t added_roads, char *type, size_t lanes) 
     if (count == 0) return decrypt(0);
     else
     return decrypt(sum / count);
+}
+
+size_t input_lanes(size_t * lanes) {
+    if (lanes == NULL) return 1;
+    printf("Введите число полос:\n");
+    int res = scanf("%zu", lanes);
+    while (!res || *lanes > MAX_QULITY_SIZE) {
+        // проверка на валидность
+        if (!res) {
+            printf("Введите корректно число полос!:\n");
+            res = scanf("%zu", lanes);
+        }
+        if (*lanes > 50) {
+            printf("Не существует такого количества полос!\n"
+                   "Введите корректно число полос!:\n");
+            res = scanf("%zu", lanes);
+        }
+    }
+    return 0;
+}
+
+size_t input_type(char * test_type) {
+    if (test_type == NULL) return 1;
+    printf("%s\n", "Введите вид покрытия (Асфальт или Грунт):");
+    while (1) {
+        scanf("%49s", test_type);
+        if (strcmp(test_type, ASPHALT) == 0)
+            return 0;
+        else if (strcmp(test_type, GROUND) == 0)
+            return 0;
+        else
+            printf("%s", "Некорректный ввод, повторите еще раз:\n");
+    }
+    return 0;
 }
 
 int load_data(Road * all_roads) {

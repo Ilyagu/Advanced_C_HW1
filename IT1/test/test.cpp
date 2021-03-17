@@ -10,6 +10,7 @@ extern "C" {
     #include "../src/func.c"
 }
 
+#define MAX_ROADS 50
 #define ROADS 11
 #define QUAL_ERROR -300
 #define MAX_RATING 100
@@ -187,8 +188,49 @@ TEST_F(TestQual, ivalid_qual_null_on_type) {
 // test load_data
 //
 
-TEST(TestLoad, invalid_load) {
+class TestLoad : public ::testing::Test {
+ protected:
+    void SetUp() {
+        all_roads = reinterpret_cast<Road *>(malloc(sizeof(Road) * MAX_ROADS));
+
+        load_data(all_roads);
+    }
+    void TearDown() {
+        free(all_roads);
+    }
+    Road *all_roads;
+};
+
+TEST_F(TestLoad, invalid_load) {
     ASSERT_EQ(LOAD_ERROR, load_data(NULL));
+}
+
+TEST_F(TestLoad, load_1_object) {
+    EXPECT_EQ(300, all_roads[0].length);
+    EXPECT_STREQ(ASPHALT, all_roads[0].type);
+    EXPECT_STREQ(GOOD, all_roads[0].quality);
+    EXPECT_EQ(4, all_roads[0].lanes);
+}
+
+TEST_F(TestLoad, load_2_object) {
+    EXPECT_EQ(2000, all_roads[1].length);
+    EXPECT_STREQ(GROUND, all_roads[1].type);
+    EXPECT_STREQ(EXCELLENT, all_roads[1].quality);
+    EXPECT_EQ(1, all_roads[1].lanes);
+}
+
+TEST_F(TestLoad, load_3_object) {
+    EXPECT_EQ(400, all_roads[2].length);
+    EXPECT_STREQ(ASPHALT, all_roads[2].type);
+    EXPECT_STREQ(TERRIBLE, all_roads[2].quality);
+    EXPECT_EQ(5, all_roads[2].lanes);
+}
+
+TEST_F(TestLoad, load_last_object) {
+    EXPECT_EQ(30, all_roads[9].length);
+    EXPECT_STREQ(GROUND, all_roads[9].type);
+    EXPECT_STREQ(TERRIBLE, all_roads[9].quality);
+    EXPECT_EQ(1, all_roads[9].lanes);
 }
 
 //
